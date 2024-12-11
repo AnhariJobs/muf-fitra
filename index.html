@@ -1,3 +1,5 @@
+gabungkan logika nya dengan code berikut 
+
 <!DOCTYPE html> 
 <html lang="en">
 
@@ -58,11 +60,8 @@
     <script>
 
         let data = [];
-        let filteredData = [];
 
-        let lastMerk = ''; // Menyimpan Merk terakhir yang ada
-        let lastGrupModel = ''; // Menyimpan Grup Model terakhir yang ada
-        let lastModel = ''; // Menyimpan Model terakhir yang ada
+        let filteredData = [];
 
 
 
@@ -75,8 +74,6 @@
             data = await response.json();
 
             filteredData = [...data];
-
-            renderResults(); // Render hasil setelah data dimuat
 
         }
 
@@ -140,27 +137,22 @@
 
                 resultItem.classList.add('result-item');
 
-                // Mengisi kolom kosong dengan data sebelumnya
-                const merk = item["MERK"] || lastMerk;
-                const grupModel = item["GRUP MODEL"] || lastGrupModel;
-                const model = item["MODEL"] || lastModel;
-
-                // Update nilai terakhir
-                if (item["MERK"]) lastMerk = item["MERK"];
-                if (item["GRUP MODEL"]) lastGrupModel = item["GRUP MODEL"];
-                if (item["MODEL"]) lastModel = item["MODEL"];
-
-                // Menampilkan hasil pencarian untuk item ini
                 resultItem.innerHTML = `
-                    <strong>MERK:</strong> ${merk} <br>
-                    <strong>GRUP MODEL:</strong> ${grupModel} <br>
-                    <strong>MODEL:</strong> ${model} <br>
-                    <strong>CC:</strong> ${item["CC"] || '-'} <br>
-                    <strong>Jenis:</strong> ${item["Jenis"] || '-'} <br>
-                    <strong>BBM:</strong> ${item["BBM"] || '-'} <br>
-                    <strong>Transmisi:</strong> ${item["Transmisi"] || '-'} <br>
+
                     <strong>MODEL DESC SYSTEM:</strong> ${item["MODEL DESC SYSTEM"] || '-'} <br>
+
+                    <strong>MODEL:</strong> ${item["MODEL"] || '-'} <br>
+
+                    <strong>CC:</strong> ${item["CC"] || '-'} <br>
+
+                    <strong>Jenis:</strong> ${item["Jenis"] || '-'} <br>
+
+                    <strong>BBM:</strong> ${item["BBM"] || '-'} <br>
+
+                    <strong>Transmisi:</strong> ${item["Transmisi"] || '-'} <br>
+
                     <strong>CODE ACQ:</strong> ${item["CODE"] || '-'} <br>
+
                 `;
 
                 resultContainer.appendChild(resultItem);
