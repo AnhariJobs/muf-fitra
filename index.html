@@ -38,7 +38,6 @@
             gap: 10px;
             justify-content: center;
             margin-bottom: 20px;
-            position: relative;
         }
 
         .form-control {
@@ -61,7 +60,6 @@
             margin-bottom: 20px;
             transition: transform 0.3s ease, box-shadow 0.3s ease;
             cursor: pointer;
-            position: relative;
         }
 
         .result-item:hover {
@@ -71,33 +69,6 @@
 
         .highlight {
             background-color: #ffeb3b;
-        }
-
-        .click-indicator {
-            position: absolute;
-            top: 15px;
-            right: 15px;
-            font-size: 1.2rem;
-            color: #ff6f61;
-        }
-
-        .click-indicator:hover {
-            cursor: pointer;
-        }
-
-        .clear-icon {
-            position: absolute;
-            right: 15px;
-            top: 50%;
-            transform: translateY(-50%);
-            font-size: 1.2rem;
-            color: #888;
-            cursor: pointer;
-            display: none;
-        }
-
-        .clear-icon.show {
-            display: block;
         }
 
         footer {
@@ -131,7 +102,6 @@
         <h1>Cari Data Mobil</h1>
         <div class="form-inline mb-4">
             <input type="text" id="searchBox" class="form-control" placeholder="Masukkan kata kunci...">
-            <i class="fas fa-times clear-icon" id="clearSearch"></i>
         </div>
 
         <div class="result" id="result"></div>
@@ -168,15 +138,6 @@
         // Pencarian fleksibel
         document.getElementById('searchBox').addEventListener('input', function () {
             const query = this.value.toLowerCase().trim();
-            const clearIcon = document.getElementById('clearSearch');
-
-            // Menampilkan ikon X hanya jika inputan tidak kosong
-            if (query !== "") {
-                clearIcon.classList.add('show');
-            } else {
-                clearIcon.classList.remove('show');
-            }
-
             const filteredData = data.filter(item => {
                 // Memecah query menjadi beberapa kata kunci
                 const keywords = query.split(' ').filter(Boolean);
@@ -190,7 +151,6 @@
             renderResults(filteredData, query);
         });
 
-        // Menampilkan hasil pencarian
         function renderResults(filteredData, query) {
             const resultContainer = document.getElementById('result');
             resultContainer.innerHTML = '';
@@ -222,12 +182,6 @@
                     <strong>CODE:</strong> ${item["CODE"] || '-'} <br>
                 `;
 
-                // Menambahkan indikator "Klik untuk detail"
-                const clickIndicator = document.createElement('span');
-                clickIndicator.classList.add('click-indicator');
-                clickIndicator.innerHTML = '<i class="fas fa-info-circle"></i> Klik untuk detail';
-                resultItem.appendChild(clickIndicator);
-
                 // Menambahkan event listener untuk menampilkan modal detail
                 resultItem.addEventListener('click', () => {
                     showDetailModal(item, query);
@@ -248,18 +202,24 @@
                 <strong>BBM:</strong> ${item["BBM"] || '-'} <br>
                 <strong>Transmisi:</strong> ${item["Transmisi"] || '-'} <br>
                 <strong>CODE:</strong> ${item["CODE"] || '-'} <br>
+                <hr>
+                <h5>Harga Berdasarkan Tahun:</h5>
             `;
+
+            // Menampilkan harga berdasarkan tahun yang relevan dengan kata kunci pencarian
+            Object.keys(item).forEach(key => {
+                if (key.match(/^\d{4}$/)) {
+                    const price = item[key];
+                    if (price) {
+                        modalContent += `<strong>${key}:</strong> ${new Intl.NumberFormat().format(price)}<br>`;
+                    }
+                }
+            });
+
             modalBody.innerHTML = modalContent;
             const modal = new bootstrap.Modal(document.getElementById('detailModal'));
             modal.show();
         }
-
-        // Fungsi untuk menghapus inputan pencarian
-        document.getElementById('clearSearch').addEventListener('click', () => {
-            document.getElementById('searchBox').value = '';
-            document.getElementById('clearSearch').classList.remove('show');
-            renderResults([], '');
-        });
 
         window.onload = loadData;
     </script>
