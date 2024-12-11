@@ -59,6 +59,7 @@
             padding: 15px;
             margin-bottom: 20px;
             transition: transform 0.3s ease, box-shadow 0.3s ease;
+            cursor: pointer;
         }
 
         .result-item:hover {
@@ -89,6 +90,10 @@
         footer a:hover {
             color: #ff4b39;
         }
+
+        .modal-content {
+            font-family: 'Poppins', sans-serif;
+        }
     </style>
 </head>
 
@@ -100,6 +105,21 @@
         </div>
 
         <div class="result" id="result"></div>
+    </div>
+
+    <!-- Modal Detail -->
+    <div class="modal fade" id="detailModal" tabindex="-1" aria-labelledby="detailModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="detailModalLabel">Detail Mobil</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" id="modalBody">
+                    <!-- Detail data will be inserted here -->
+                </div>
+            </div>
+        </div>
     </div>
 
     <!-- Bootstrap JS and Popper.js -->
@@ -118,6 +138,7 @@
         document.getElementById('searchBox').addEventListener('input', function () {
             const query = this.value.toLowerCase();
             const filteredData = data.filter(item => {
+                // Menyaring berdasarkan tahun dan kata kunci lainnya
                 return Object.values(item).some(value => value.toString().toLowerCase().includes(query));
             });
             renderResults(filteredData);
@@ -153,8 +174,42 @@
                     <strong>CODE:</strong> ${item["CODE"] || '-'} <br>
                 `;
 
+                // Menambahkan event listener untuk menampilkan modal detail
+                resultItem.addEventListener('click', () => {
+                    showDetailModal(item);
+                });
+
                 resultContainer.appendChild(resultItem);
             });
+        }
+
+        // Fungsi untuk menampilkan modal dengan detail data
+        function showDetailModal(item) {
+            const modalBody = document.getElementById('modalBody');
+            let modalContent = `
+                <strong>MODEL DESC SYSTEM:</strong> ${item["MODEL DESC SYSTEM"]} <br>
+                <strong>MODEL:</strong> ${item["MODEL"] || '-'} <br>
+                <strong>CC:</strong> ${item["CC"] || '-'} <br>
+                <strong>Jenis:</strong> ${item["Jenis"] || '-'} <br>
+                <strong>BBM:</strong> ${item["BBM"] || '-'} <br>
+                <strong>Transmisi:</strong> ${item["Transmisi"] || '-'} <br>
+                <strong>CODE:</strong> ${item["CODE"] || '-'} <br>
+                <hr>
+                <h5>Harga Berdasarkan Tahun:</h5>
+            `;
+            // Menampilkan harga berdasarkan tahun
+            Object.keys(item).forEach(key => {
+                if (key.match(/^\d{4}$/)) {
+                    const price = item[key];
+                    if (price) {
+                        modalContent += `<strong>${key}:</strong> ${new Intl.NumberFormat().format(price)}<br>`;
+                    }
+                }
+            });
+
+            modalBody.innerHTML = modalContent;
+            const modal = new bootstrap.Modal(document.getElementById('detailModal'));
+            modal.show();
         }
 
         window.onload = loadData;
