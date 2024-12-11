@@ -5,10 +5,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cari Data Mobil</title>
+
     <!-- Bootstrap 5.3.1 -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet">
+
     <!-- Font Awesome Icons -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500&family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
 
@@ -69,6 +72,11 @@
 
         .highlight {
             background-color: #ffeb3b;
+        }
+
+        .result-item .fa {
+            margin-right: 8px;
+            color: #ff6f61;
         }
 
         footer {
@@ -136,10 +144,15 @@
         }
 
         document.getElementById('searchBox').addEventListener('input', function () {
-            const query = this.value.toLowerCase();
+            const query = this.value.toLowerCase().trim();
             const filteredData = data.filter(item => {
-                // Menyaring berdasarkan tahun dan kata kunci lainnya
-                return Object.values(item).some(value => value.toString().toLowerCase().includes(query));
+                // Memecah query menjadi beberapa kata kunci
+                const keywords = query.split(' ').filter(Boolean);
+
+                // Mencocokkan setiap kata kunci dengan bagian dari item
+                return keywords.every(keyword => {
+                    return Object.values(item).some(value => value.toString().toLowerCase().includes(keyword));
+                });
             });
             renderResults(filteredData, query);
         });
@@ -161,17 +174,21 @@
                 resultItem.classList.add('result-item');
 
                 let highlightedText = item["MODEL DESC SYSTEM"];
-                highlightedText = highlightedText.replace(/(Brio|AT|9FO|MT)/gi, '<span class="highlight">$1</span>');
+                highlightedText = highlightedText.replace(new RegExp('(' + query.split(' ').join('|') + ')', 'gi'), '<span class="highlight">$1</span>');
 
                 resultItem.innerHTML = `
-                    <i class="fas fa-car"></i>
-                    <strong>MODEL DESC SYSTEM:</strong> ${highlightedText} <br>
-                    <strong>MODEL:</strong> ${item["MODEL"] || '-'} <br>
-                    <strong>CC:</strong> ${item["CC"] || '-'} <br>
-                    <strong>Jenis:</strong> ${item["Jenis"] || '-'} <br>
-                    <strong>BBM:</strong> ${item["BBM"] || '-'} <br>
-                    <strong>Transmisi:</strong> ${item["Transmisi"] || '-'} <br>
-                    <strong>CODE:</strong> ${item["CODE"] || '-'} <br>
+                    <div class="d-flex align-items-center">
+                        <i class="fas fa-car fa-2x"></i>
+                        <div class="ms-3">
+                            <strong>MODEL DESC SYSTEM:</strong> ${highlightedText} <br>
+                            <strong>MODEL:</strong> ${item["MODEL"] || '-'} <br>
+                            <strong>CC:</strong> ${item["CC"] || '-'} <br>
+                            <strong>Jenis:</strong> ${item["Jenis"] || '-'} <br>
+                            <strong>BBM:</strong> ${item["BBM"] || '-'} <br>
+                            <strong>Transmisi:</strong> ${item["Transmisi"] || '-'} <br>
+                            <strong>CODE:</strong> ${item["CODE"] || '-'} <br>
+                        </div>
+                    </div>
                 `;
 
                 // Menambahkan event listener untuk menampilkan modal detail
@@ -220,11 +237,13 @@
     <footer>
         <p>&copy; 2024 Cari Data Mobil. All rights reserved.</p>
         <div>
-            <a href="#" target="_blank"><i class="fab fa-facebook"></i></a>
-            <a href="#" target="_blank"><i class="fab fa-twitter"></i></a>
-            <a href="#" target="_blank"><i class="fab fa-instagram"></i></a>
+            <a href="#" target="_blank"><i class="fab fa-facebook fa-lg"></i></a>
+            <a href="#" target="_blank"><i class="fab fa-twitter fa-lg"></i></a>
+            <a href="#" target="_blank"><i class="fab fa-instagram fa-lg"></i></a>
+            <a href="#" target="_blank"><i class="fab fa-linkedin fa-lg"></i></a>
         </div>
     </footer>
+
 </body>
 
 </html>
