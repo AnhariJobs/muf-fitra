@@ -170,13 +170,14 @@
             }
 
             const filteredData = data.filter(item => {
-                // Memecah query menjadi beberapa kata kunci
+                // Memecah query menjadi beberapa kata kunci dan memungkinkan pencocokan fleksibel
                 const keywords = query.split(' ').filter(Boolean);
 
-                // Mencocokkan setiap kata kunci dengan bagian dari item
                 return keywords.every(keyword => {
                     // Memeriksa setiap nilai dalam item (termasuk key dan value) apakah mengandung keyword
-                    return Object.values(item).some(value => value.toString().toLowerCase().includes(keyword));
+                    return Object.values(item).some(value => {
+                        return value.toString().toLowerCase().includes(keyword);
+                    });
                 });
             });
 
@@ -263,7 +264,6 @@
         });
 
         window.onload = loadData;
-
     </script>
 
     <!-- Footer -->
