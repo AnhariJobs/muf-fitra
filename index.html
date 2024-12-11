@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pencarian Data Mobil</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        #results { margin-top: 20px; }
+        table { border-collapse: collapse; width: 100%; }
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+        th { background-color: #f4f4f4; }
+        .pagination button { margin: 2px; }
+    </style>
+</head>
+<body>
+    <h1>Pencarian Data Mobil</h1>
+
+    <!-- Input pencarian -->
+    <input type="text" id="searchBox" placeholder="Masukkan kata kunci...">
+    	
+    <!-- Filter kolom -->
+    <select id="filterColumn">
+        <option value="">Semua Kolom</option>
+        <option value="MERK">Merk</option>
+        <option value="MODEL">Model</option>
+        <option value="Transmisi">Transmisi</option>
+        <option value="BBM">BBM</option>
+    </select>
+
+    <!-- Tombol cari -->
+    <button onclick="search()">Cari</button>
+
+    <!-- Sortir -->
+    <select id="sortColumn">
+        <option value="2023">Harga 2023</option>
+        <option value="2024">Harga 2024</option>
+        <option value="MERK">Merk</option>
+        <option value="CC">CC</option>
+    </select>
+    <select id="sortOrder">
+        <option value="asc">Ascending</option>
+        <option value="desc">Descending</option>
+    </select>
+    <button onclick="sortResults()">Sortir</button>
+
+    <!-- Statistik -->
+    <button onclick="calculateStatistics()">Lihat Statistik</button>
+
+    <!-- Tabel hasil -->
+    <div id="results"></div>
+
+    <!-- Pagination -->
+    <div id="pagination"></div>
+
+    <script>
+        let data = [];
+        let currentPage = 1;
+        const rowsPerPage = 10;
+
+        // Memuat data JSON
+        async function loadData() {
+            const response = await fetch('data.json');
+            data = await response.json();
+            displayPage(1); // Tampilkan halaman pertama
+            setupPagination();
+        }
+
+        // Fungsi pencarian
+        function search() {
+            const query = document.getElementById('searchBox').value.toLowerCase();
+            const filterColumn = document.getElementById('filterColumn').value;
+
+            const results = data.filter(item => {
+                if (filterColumn) {
+                    return item[filterColumn]?.toString().toLowerCase().includes(query);
+                }
+                return Object.values(item).some(value =>
+                    value.toString().toLowerCase().includes(query)
+                );
+            });
+
+            displayPage(1, results);
+            setupPagination(results);
+        }
+
+        // Fungsi sortir
+        function sortResults() {
+            const column = document.getElementById('sortColumn').value;
+            const order = document.getElementById('sortOrder').value;
+
+            data.sort((a, b) => {
+                const valA = a[column] || 0;
+                const valB = b[column] || 0;
+                return order === 'asc' ? valA - valB : valB - valA;
+            });
+
+            displayPage(1);
+        }
+
+        // Fungsi highlight
+        function highlight(text, query) {
+            const regex = new RegExp(`(${query})`, 'gi');
+            return text.replace(regex, '<mark>$1</mark>');
+        }
+
+        // Menampilkan hasil pencarian
+        function displayResults(results) {
+            const resultsDiv = document.getElementById('results');
+            const query = document.getElementById('searchBox').value.toLowerCase();
+
+            if (results.length === 0) {
+                resultsDiv.innerHTML = "<p>Tidak ada hasil ditemukan.</p>";
+                return;
+            }
+
+            // Ambil semua properti dari objek pertama sebagai header tabel
+            let headers = Object.keys(results[0]);
+            let table = "<table><tr>";
+            headers.forEach(header => table += `<th>${header}</th>`);
+            table += "</tr>";
+
+            // Isi tabel dengan data hasil pencarian
+            results.forEach(row => {
+                table += "<tr>";
+                headers.forEach(header => {
+                    const cellContent = row[header]?.toString() || '';
+                    table += `<td>${highlight(cellContent, query)}</td>`;
+                });
+                table += "</tr>";
+            });
+            table += "</table>";
+
+            resultsDiv.innerHTML = table;
+        }
+
+        // Pagination
+        function displayPage(page, customData = null) {
+            const currentData = customData || data;
+            const start = (page - 1) * rowsPerPage;
+            const end = start + rowsPerPage;
+            const paginatedData = currentData.slice(start, end);
+            currentPage = page;
+
+            displayResults(paginatedData);
+        }
+
+        function setupPagination(customData = null) {
+            const currentData = customData || data;
+            const totalPages = Math.ceil(currentData.length / rowsPerPage);
+            const paginationDiv = document.getElementById('pagination');
+
+            paginationDiv.innerHTML = "";
+
+            for (let i = 1; i <= totalPages; i++) {
+                paginationDiv.innerHTML += `<button onclick="displayPage(${i}, ${JSON.stringify(currentData)})">${i}</button>`;
+            }
+        }
+
+        // Statistik
+        function calculateStatistics() {
+            const prices = data.map(item => parseFloat(item['2023']) || 0).filter(price => price > 0);
+            const average = prices.reduce((a, b) => a + b, 0) / prices.length;
+
+            alert(`Rata-rata Harga 2023: Rp${average.toFixed(2)}`);
+        }
+
+        // Memuat data saat halaman dibuka
+        window.onload = loadData;
+    </script>
+</body>
+</html>
