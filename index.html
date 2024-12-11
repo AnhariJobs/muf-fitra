@@ -60,6 +60,7 @@
             margin-bottom: 20px;
             transition: transform 0.3s ease, box-shadow 0.3s ease;
             cursor: pointer;
+            position: relative;
         }
 
         .result-item:hover {
@@ -69,6 +70,18 @@
 
         .highlight {
             background-color: #ffeb3b;
+        }
+
+        .click-indicator {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            font-size: 1.2rem;
+            color: #ff6f61;
+        }
+
+        .click-indicator:hover {
+            cursor: pointer;
         }
 
         footer {
@@ -181,6 +194,12 @@
                     <strong>Transmisi:</strong> ${item["Transmisi"] || '-'} <br>
                     <strong>CODE:</strong> ${item["CODE"] || '-'} <br>
                 `;
+
+                // Menambahkan indikator "Klik untuk detail"
+                const clickIndicator = document.createElement('span');
+                clickIndicator.classList.add('click-indicator');
+                clickIndicator.innerHTML = '<i class="fas fa-info-circle"></i> Klik untuk detail';
+                resultItem.appendChild(clickIndicator);
 
                 // Menambahkan event listener untuk menampilkan modal detail
                 resultItem.addEventListener('click', () => {
