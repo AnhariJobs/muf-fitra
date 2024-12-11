@@ -30,7 +30,9 @@
             color: #333;
             text-align: center;
             margin-bottom: 30px;
-            font-size: 2.5rem;
+            font-size: 3rem;
+            font-weight: 700;
+            color: #ff6f61;
         }
 
         .form-inline {
@@ -85,6 +87,7 @@
             color: #ff6f61;
             text-decoration: none;
             margin: 0 10px;
+            font-size: 1.2rem;
         }
 
         footer a:hover {
@@ -94,12 +97,18 @@
         .modal-content {
             font-family: 'Poppins', sans-serif;
         }
+
+        .icon {
+            font-size: 1.5rem;
+            color: #ff6f61;
+        }
     </style>
 </head>
 
 <body>
     <div class="container">
-        <h1>Cari Data Mobil</h1>
+        <h1><i class="fas fa-search"></i> Cari Data Mobil <i class="fas fa-car"></i></h1>
+
         <div class="form-inline mb-4">
             <input type="text" id="searchBox" class="form-control" placeholder="Masukkan kata kunci...">
         </div>
@@ -136,15 +145,21 @@
         }
 
         document.getElementById('searchBox').addEventListener('input', function () {
-            const query = this.value.toLowerCase();
+            const query = this.value.toLowerCase().trim();
             const filteredData = data.filter(item => {
-                // Menyaring berdasarkan tahun dan kata kunci lainnya
-                return Object.values(item).some(value => value.toString().toLowerCase().includes(query));
+                // Memecah query menjadi beberapa kata kunci
+                const keywords = query.split(' ').filter(Boolean);
+
+                // Mencocokkan setiap kata kunci dengan bagian dari item
+                return keywords.every(keyword => {
+                    // Memeriksa setiap nilai dalam item (termasuk key dan value) apakah mengandung keyword
+                    return Object.values(item).some(value => value.toString().toLowerCase().includes(keyword));
+                });
             });
-            renderResults(filteredData);
+            renderResults(filteredData, query);
         });
 
-        function renderResults(filteredData) {
+        function renderResults(filteredData, query) {
             const resultContainer = document.getElementById('result');
             resultContainer.innerHTML = '';
 
@@ -161,10 +176,11 @@
                 resultItem.classList.add('result-item');
 
                 let highlightedText = item["MODEL DESC SYSTEM"];
-                highlightedText = highlightedText.replace(/(Brio|AT|9FO|MT)/gi, '<span class="highlight">$1</span>');
+                // Menyoroti bagian dari hasil yang cocok dengan pencarian
+                highlightedText = highlightedText.replace(new RegExp('(' + query.split(' ').join('|') + ')', 'gi'), '<span class="highlight">$1</span>');
 
                 resultItem.innerHTML = `
-                    <i class="fas fa-car"></i>
+                    <i class="fas fa-car icon"></i>
                     <strong>MODEL DESC SYSTEM:</strong> ${highlightedText} <br>
                     <strong>MODEL:</strong> ${item["MODEL"] || '-'} <br>
                     <strong>CC:</strong> ${item["CC"] || '-'} <br>
@@ -172,11 +188,12 @@
                     <strong>BBM:</strong> ${item["BBM"] || '-'} <br>
                     <strong>Transmisi:</strong> ${item["Transmisi"] || '-'} <br>
                     <strong>CODE:</strong> ${item["CODE"] || '-'} <br>
+                    <i class="fas fa-info-circle"></i> Klik untuk lihat detail
                 `;
 
                 // Menambahkan event listener untuk menampilkan modal detail
                 resultItem.addEventListener('click', () => {
-                    showDetailModal(item);
+                    showDetailModal(item, query);
                 });
 
                 resultContainer.appendChild(resultItem);
@@ -184,7 +201,7 @@
         }
 
         // Fungsi untuk menampilkan modal dengan detail data
-        function showDetailModal(item) {
+        function showDetailModal(item, query) {
             const modalBody = document.getElementById('modalBody');
             let modalContent = `
                 <strong>MODEL DESC SYSTEM:</strong> ${item["MODEL DESC SYSTEM"]} <br>
@@ -197,7 +214,8 @@
                 <hr>
                 <h5>Harga Berdasarkan Tahun:</h5>
             `;
-            // Menampilkan harga berdasarkan tahun
+
+            // Menampilkan harga berdasarkan tahun yang relevan dengan kata kunci pencarian
             Object.keys(item).forEach(key => {
                 if (key.match(/^\d{4}$/)) {
                     const price = item[key];
@@ -219,11 +237,11 @@
     <footer>
         <p>&copy; 2024 Cari Data Mobil. All rights reserved.</p>
         <div>
-            <a href="#" target="_blank"><i class="fab fa-facebook"></i></a>
-            <a href="#" target="_blank"><i class="fab fa-twitter"></i></a>
-            <a href="#" target="_blank"><i class="fab fa-instagram"></i></a>
+            <a href="https://wa.me/6282288246821" target="_blank">
+                <i class="fab fa-whatsapp"></i> Hubungi via WhatsApp untuk pemesanan website
+            </a>
         </div>
     </footer>
 </body>
-
 </html>
+
