@@ -99,24 +99,26 @@
 <script> 
     let data = [];
 
-    async function loadData() {
-        const response = await fetch('data.json');
-        data = await response.json();
+    async function loadData() { 
+    const response = await fetch('data.json'); 
+    data = await response.json(); 
 
-        // Mengisi data kosong ("-") dengan data dari baris sebelumnya yang relevan
-        let lastFilled = {};
-        data.forEach(item => {
-            Object.keys(item).forEach(key => {
-                if (item[key] === "" || item[key] === "-") {
-                    if (lastFilled[key]) {
-                        item[key] = lastFilled[key]; // Isi data kosong dengan data sebelumnya
-                    }
-                } else {
-                    lastFilled[key] = item[key]; // Perbarui data terakhir yang valid
-                }
-            });
-        });
-    }
+    // Mengisi data kosong ("-") pada MERK, GRUP MODEL, dan MODEL dengan data dari baris sebelumnya yang relevan
+    let lastFilled = {}; 
+    data.forEach(item => { 
+        // Hanya memeriksa dan mengisi tiga field yang relevan
+        ["MERK", "GRUP MODEL", "MODEL"].forEach(key => {
+            if (item[key] === "" || item[key] === "-") { 
+                if (lastFilled[key]) { 
+                    item[key] = lastFilled[key]; // Isi data kosong dengan data sebelumnya
+                } 
+            } else { 
+                lastFilled[key] = item[key]; // Perbarui data terakhir yang valid untuk field ini
+            }
+        }); 
+    });
+}
+
 
     document.getElementById('searchBox').addEventListener('input', function () {
         const query = this.value.toLowerCase().trim();
