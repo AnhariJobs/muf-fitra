@@ -16,15 +16,18 @@
     <style>
         body {
             font-family: 'Poppins', sans-serif;
-            background-color: #000000; /* Latar belakang hitam */
-            color: #ecf0f1; /* Teks putih terang agar kontras dengan latar belakang hitam */
+            background-color: #ffffff; /* Latar belakang terang */
+            color: #333333; /* Teks gelap untuk kontras */
             margin: 0;
             padding: 0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
         }
 
         h1 {
             font-family: 'Roboto', sans-serif;
-            color: #ecf0f1; /* Warna teks putih terang */
+            color: #333333; /* Warna teks gelap */
             text-align: center;
             margin-bottom: 40px;
             font-size: 2.5rem;
@@ -34,6 +37,7 @@
             max-width: 1200px;
             margin: 0 auto;
             padding: 30px;
+            flex-grow: 1;
         }
 
         .form-inline {
@@ -47,15 +51,15 @@
         .form-control {
             border-radius: 30px;
             padding: 12px 20px;
-            border: 2px solid #3498db; /* Teal border */
+            border: 2px solid #3498db; /* Border biru terang */
             transition: all 0.3s ease;
             font-size: 1.1rem;
-            background-color: #1a1a1a; /* Latar belakang input gelap */
-            color: #ecf0f1; /* Teks input berwarna putih terang */
+            background-color: #f7f7f7; /* Latar belakang input terang */
+            color: #333333; /* Teks input gelap */
         }
 
         .form-control:focus {
-            border-color: #1abc9c; /* Teal color focus */
+            border-color: #1abc9c; /* Fokus border hijau terang */
             box-shadow: 0 0 8px rgba(26, 188, 156, 0.5);
         }
 
@@ -75,20 +79,20 @@
         }
 
         .result-item {
-            background-color: #1a1a1a; /* Gelap dengan sedikit perbedaan dari latar belakang */
-            border: 2px solid #f1f1f1; /* Light gray border */
+            background-color: #f7f7f7; /* Gelap dengan sedikit perbedaan dari latar belakang */
+            border: 2px solid #f1f1f1; /* Border abu-abu terang */
             border-radius: 10px;
             padding: 20px;
             margin-bottom: 30px;
-            box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.2);
+            box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.1);
             transition: transform 0.3s ease, box-shadow 0.3s ease;
             cursor: pointer;
         }
 
         .result-item:hover {
             transform: scale(1.05);
-            box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.3);
-            border-color: #f39c12; /* Yellow border on hover */
+            box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.2);
+            border-color: #f39c12; /* Border kuning saat hover */
         }
 
         .highlight {
@@ -97,33 +101,34 @@
         }
 
         footer {
-            background-color: #1a1a1a; /* Dark footer */
-            color: #ecf0f1;
+            background-color: #ffffff; /* Latar belakang terang */
+            color: #333333;
             padding: 30px;
             text-align: center;
             position: relative;
             margin-top: 50px;
+            border-top: 2px solid #f1f1f1;
         }
 
         footer a {
-            color: #ecf0f1; /* Light gray links */
+            color: #333333; /* Tautan gelap */
             text-decoration: none;
             margin: 0 15px;
             transition: color 0.3s ease;
         }
 
         footer a:hover {
-            color: #3498db; /* Blue color on hover */
+            color: #3498db; /* Warna biru pada hover */
         }
 
         .modal-content {
             font-family: 'Poppins', sans-serif;
-            background-color: #1a1a1a; /* Gelap untuk modal */
-            color: #ecf0f1; /* Teks modal putih terang */
+            background-color: #ffffff; /* Gelap untuk modal */
+            color: #333333; /* Teks modal gelap */
         }
 
         .modal-header {
-            border-bottom: 2px solid #3498db; /* Teal border for modal header */
+            border-bottom: 2px solid #3498db; /* Border biru terang untuk modal header */
         }
 
         .card {
@@ -167,12 +172,8 @@
 
     <!-- Footer -->
     <footer>
-        <p>&copy; 2024 Car Data Inc. | <a href="#">Privacy Policy</a> | <a href="#">Terms of Service</a></p>
-        <p>Follow us: 
-            <a href="#"><i class="fab fa-facebook"></i></a>
-            <a href="#"><i class="fab fa-twitter"></i></a>
-            <a href="#"><i class="fab fa-instagram"></i></a>
-        </p>
+        <p>&copy; 2024 Desain oleh Fahmi Anhari.  <br>
+ <a href="https://wa.me/6282288246721" target="_blank">Klik untuk pesan via WhatsApp <i class="fab fa-whatsapp"></i></a>
     </footer>
 
     <!-- Bootstrap JS & Popper -->
@@ -201,30 +202,29 @@
         }
 
         document.getElementById('searchBox').addEventListener('input', function () {
-    const query = this.value.toLowerCase().trim();
+            const query = this.value.toLowerCase().trim();
 
-    const clearIcon = document.getElementById('clearSearch');
-    if (query !== "") {
-        clearIcon.classList.add('show');
-    } else {
-        clearIcon.classList.remove('show');
-    }
-
-    const filteredData = data.filter(item => {
-        const keywords = query.split(' ').filter(Boolean); // Pecah kata kunci
-
-        // Cek semua kata kunci (termasuk angka atau teks)
-        return keywords.every(keyword => {
-            if (/^\d{4}$/.test(keyword)) { // Jika keyword adalah tahun (4 digit angka)
-                return Object.keys(item).includes(keyword) && item[keyword] !== "";
+            const clearIcon = document.getElementById('clearSearch');
+            if (query !== "") {
+                clearIcon.classList.add('show');
+            } else {
+                clearIcon.classList.remove('show');
             }
-            return Object.values(item).some(value => value.toString().toLowerCase().includes(keyword));
+
+            const filteredData = data.filter(item => {
+                const keywords = query.split(' ').filter(Boolean); // Pecah kata kunci
+
+                // Cek semua kata kunci (termasuk angka atau teks)
+                return keywords.every(keyword => {
+                    if (/^\d{4}$/.test(keyword)) { // Jika keyword adalah tahun (4 digit angka)
+                        return Object.keys(item).includes(keyword) && item[keyword] !== "";
+                    }
+                    return Object.values(item).some(value => value.toString().toLowerCase().includes(keyword));
+                });
+            });
+
+            renderResults(filteredData, query);
         });
-    });
-
-    renderResults(filteredData, query);
-});
-
 
         function renderResults(filteredData, query) {
             const resultContainer = document.getElementById('result');
@@ -264,31 +264,31 @@
         }
 
         function showDetailModal(item, query) {
-    const modalBody = document.getElementById('modalBody');
-    let modalContent = `
-        <strong>Merk:</strong> ${item["MERK"] || '-'} <br>
-        <strong>MODEL DESC SYSTEM:</strong> ${item["MODEL DESC SYSTEM"]} <br>
-        <strong>MODEL:</strong> ${item["MODEL"] || '-'} <br>
-        <strong>CC:</strong> ${item["CC"] || '-'} <br>
-        <strong>Jenis:</strong> ${item["Jenis"] || '-'} <br>
-        <strong>BBM:</strong> ${item["BBM"] || '-'} <br>
-        <strong>Transmisi:</strong> ${item["Transmisi"] || '-'} <br>
-        <strong>CODE:</strong> ${item["CODE"] || '-'} <br>
-        <hr>
-        <h5>Harga Berdasarkan Tahun:</h5>
-    `;
+            const modalBody = document.getElementById('modalBody');
+            let modalContent = `
+                <strong>Merk:</strong> ${item["MERK"] || '-'} <br>
+                <strong>MODEL DESC SYSTEM:</strong> ${item["MODEL DESC SYSTEM"]} <br>
+                <strong>MODEL:</strong> ${item["MODEL"] || '-'} <br>
+                <strong>CC:</strong> ${item["CC"] || '-'} <br>
+                <strong>Jenis:</strong> ${item["Jenis"] || '-'} <br>
+                <strong>BBM:</strong> ${item["BBM"] || '-'} <br>
+                <strong>Transmisi:</strong> ${item["Transmisi"] || '-'} <br>
+                <strong>CODE:</strong> ${item["CODE"] || '-'} <br>
+                <hr>
+                <h5>Harga Berdasarkan Tahun:</h5>
+            `;
 
-    // Tambahkan harga berdasarkan tahun
-    Object.keys(item).forEach(key => {
-        if (/^\d{4}$/.test(key) && item[key]) {
-            modalContent += `<strong>${key}:</strong> Rp ${new Intl.NumberFormat('id-ID').format(item[key])} <br>`;
+            // Tambahkan harga berdasarkan tahun
+            Object.keys(item).forEach(key => {
+                if (/^\d{4}$/.test(key) && item[key]) {
+                    modalContent += `<strong>${key}:</strong> Rp ${new Intl.NumberFormat('id-ID').format(item[key])} <br>`;
+                }
+            });
+
+            modalBody.innerHTML = modalContent;
+            const myModal = new bootstrap.Modal(document.getElementById('detailModal'));
+            myModal.show();
         }
-    });
-
-    modalBody.innerHTML = modalContent;
-    const myModal = new bootstrap.Modal(document.getElementById('detailModal'));
-    myModal.show();
-}
 
         document.getElementById('clearSearch').addEventListener('click', () => {
             document.getElementById('searchBox').value = '';
