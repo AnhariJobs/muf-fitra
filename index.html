@@ -16,14 +16,15 @@
     <style>
         body {
             font-family: 'Poppins', sans-serif;
-            background-color: #f9f9f9; /* Soft off-white for a clean and light look */
+            background-color: #000000; /* Latar belakang hitam */
+            color: #ecf0f1; /* Teks putih terang agar kontras dengan latar belakang hitam */
             margin: 0;
             padding: 0;
         }
 
         h1 {
             font-family: 'Roboto', sans-serif;
-            color: #2c3e50; /* Dark blue-gray for a professional tone */
+            color: #ecf0f1; /* Warna teks putih terang */
             text-align: center;
             margin-bottom: 40px;
             font-size: 2.5rem;
@@ -46,9 +47,11 @@
         .form-control {
             border-radius: 30px;
             padding: 12px 20px;
-            border: 2px solid #3498db; /* Teal border for a modern look */
+            border: 2px solid #3498db; /* Teal border */
             transition: all 0.3s ease;
             font-size: 1.1rem;
+            background-color: #1a1a1a; /* Latar belakang input gelap */
+            color: #ecf0f1; /* Teks input berwarna putih terang */
         }
 
         .form-control:focus {
@@ -72,19 +75,19 @@
         }
 
         .result-item {
-            background-color: #ffffff;
+            background-color: #1a1a1a; /* Gelap dengan sedikit perbedaan dari latar belakang */
             border: 2px solid #f1f1f1; /* Light gray border */
             border-radius: 10px;
             padding: 20px;
             margin-bottom: 30px;
-            box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.1);
+            box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.2);
             transition: transform 0.3s ease, box-shadow 0.3s ease;
             cursor: pointer;
         }
 
         .result-item:hover {
             transform: scale(1.05);
-            box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.2);
+            box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.3);
             border-color: #f39c12; /* Yellow border on hover */
         }
 
@@ -94,8 +97,8 @@
         }
 
         footer {
-            background-color: #34495e; /* Dark gray-blue footer */
-            color: #ffffff;
+            background-color: #1a1a1a; /* Dark footer */
+            color: #ecf0f1;
             padding: 30px;
             text-align: center;
             position: relative;
@@ -115,6 +118,8 @@
 
         .modal-content {
             font-family: 'Poppins', sans-serif;
+            background-color: #1a1a1a; /* Gelap untuk modal */
+            color: #ecf0f1; /* Teks modal putih terang */
         }
 
         .modal-header {
@@ -131,7 +136,6 @@
             transform: scale(1.05);
             box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.2);
         }
-
     </style>
 </head>
 
@@ -161,6 +165,16 @@
         </div>
     </div>
 
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2024 Car Data Inc. | <a href="#">Privacy Policy</a> | <a href="#">Terms of Service</a></p>
+        <p>Follow us: 
+            <a href="#"><i class="fab fa-facebook"></i></a>
+            <a href="#"><i class="fab fa-twitter"></i></a>
+            <a href="#"><i class="fab fa-instagram"></i></a>
+        </p>
+    </footer>
+
     <!-- Bootstrap JS & Popper -->
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.min.js"></script>
@@ -187,28 +201,30 @@
         }
 
         document.getElementById('searchBox').addEventListener('input', function () {
-            const query = this.value.toLowerCase().trim();
+    const query = this.value.toLowerCase().trim();
 
-            const clearIcon = document.getElementById('clearSearch');
-            if (query !== "") {
-                clearIcon.classList.add('show');
-            } else {
-                clearIcon.classList.remove('show');
+    const clearIcon = document.getElementById('clearSearch');
+    if (query !== "") {
+        clearIcon.classList.add('show');
+    } else {
+        clearIcon.classList.remove('show');
+    }
+
+    const filteredData = data.filter(item => {
+        const keywords = query.split(' ').filter(Boolean); // Pecah kata kunci
+
+        // Cek semua kata kunci (termasuk angka atau teks)
+        return keywords.every(keyword => {
+            if (/^\d{4}$/.test(keyword)) { // Jika keyword adalah tahun (4 digit angka)
+                return Object.keys(item).includes(keyword) && item[keyword] !== "";
             }
-
-            const filteredData = data.filter(item => {
-                const keywords = query.split(' ').filter(Boolean);
-
-                return keywords.every(keyword => {
-                    if (/\d{4}/.test(keyword)) {
-                        return Object.keys(item).some(key => key === keyword && !isNaN(item[key]));
-                    }
-                    return Object.values(item).some(value => value.toString().toLowerCase().includes(keyword));
-                });
-            });
-
-            renderResults(filteredData, query);
+            return Object.values(item).some(value => value.toString().toLowerCase().includes(keyword));
         });
+    });
+
+    renderResults(filteredData, query);
+});
+
 
         function renderResults(filteredData, query) {
             const resultContainer = document.getElementById('result');
@@ -248,31 +264,31 @@
         }
 
         function showDetailModal(item, query) {
-            const modalBody = document.getElementById('modalBody');
-            let modalContent = `
-                <strong>Merk:</strong> ${item["MERK"] || '-'} <br>
-                <strong>MODEL DESC SYSTEM:</strong> ${item["MODEL DESC SYSTEM"]} <br>
-                <strong>MODEL:</strong> ${item["MODEL"] || '-'} <br>
-                <strong>CC:</strong> ${item["CC"] || '-'} <br>
-                <strong>Jenis:</strong> ${item["Jenis"] || '-'} <br>
-                <strong>BBM:</strong> ${item["BBM"] || '-'} <br>
-                <strong>Transmisi:</strong> ${item["Transmisi"] || '-'} <br>
-                <strong>CODE:</strong> ${item["CODE"] || '-'} <br>
-                <hr>
-                <h5>Harga Berdasarkan Tahun:</h5>
-            `;
-            Object.keys(item).forEach(key => {
-                if (key.match(/^\d{4}$/)) {
-                    const price = item[key];
-                    if (price) {
-                        modalContent += `<strong>${key}:</strong> ${new Intl.NumberFormat().format(price)} <br>`;
-                    }
-                }
-            });
-            modalBody.innerHTML = modalContent;
-            const myModal = new bootstrap.Modal(document.getElementById('detailModal'));
-            myModal.show();
+    const modalBody = document.getElementById('modalBody');
+    let modalContent = `
+        <strong>Merk:</strong> ${item["MERK"] || '-'} <br>
+        <strong>MODEL DESC SYSTEM:</strong> ${item["MODEL DESC SYSTEM"]} <br>
+        <strong>MODEL:</strong> ${item["MODEL"] || '-'} <br>
+        <strong>CC:</strong> ${item["CC"] || '-'} <br>
+        <strong>Jenis:</strong> ${item["Jenis"] || '-'} <br>
+        <strong>BBM:</strong> ${item["BBM"] || '-'} <br>
+        <strong>Transmisi:</strong> ${item["Transmisi"] || '-'} <br>
+        <strong>CODE:</strong> ${item["CODE"] || '-'} <br>
+        <hr>
+        <h5>Harga Berdasarkan Tahun:</h5>
+    `;
+
+    // Tambahkan harga berdasarkan tahun
+    Object.keys(item).forEach(key => {
+        if (/^\d{4}$/.test(key) && item[key]) {
+            modalContent += `<strong>${key}:</strong> Rp ${new Intl.NumberFormat('id-ID').format(item[key])} <br>`;
         }
+    });
+
+    modalBody.innerHTML = modalContent;
+    const myModal = new bootstrap.Modal(document.getElementById('detailModal'));
+    myModal.show();
+}
 
         document.getElementById('clearSearch').addEventListener('click', () => {
             document.getElementById('searchBox').value = '';
