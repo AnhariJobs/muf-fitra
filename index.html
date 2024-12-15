@@ -6,56 +6,54 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cari Data Mobil</title>
 
+    <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500&family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
 
     <style>
         body {
             font-family: 'Poppins', sans-serif;
-            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
-            color: #fff;
+            background-color: #f9f9f9; /* Soft off-white for a clean and light look */
             margin: 0;
             padding: 0;
         }
 
-        .container {
-            max-width: 900px;
-            margin: 50px auto;
-            padding: 40px;
-            background-color: rgba(0, 0, 0, 0.6);
-            border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-        }
-
         h1 {
             font-family: 'Roboto', sans-serif;
-            font-size: 3rem;
-            color: #fff;
+            color: #2c3e50; /* Dark blue-gray for a professional tone */
             text-align: center;
-            margin-bottom: 30px;
-            font-weight: bold;
+            margin-bottom: 40px;
+            font-size: 2.5rem;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 30px;
         }
 
         .form-inline {
             display: flex;
-            gap: 15px;
             justify-content: center;
-            margin-bottom: 20px;
+            gap: 15px;
+            margin-bottom: 30px;
+            position: relative;
         }
 
         .form-control {
-            border-radius: 50px;
+            border-radius: 30px;
             padding: 12px 20px;
-            border: 1px solid #ddd;
+            border: 2px solid #3498db; /* Teal border for a modern look */
             transition: all 0.3s ease;
-            background-color: rgba(255, 255, 255, 0.8);
-            color: #333;
+            font-size: 1.1rem;
         }
 
         .form-control:focus {
-            border-color: #ff6f61;
-            box-shadow: 0 0 10px rgba(255, 111, 97, 0.4);
+            border-color: #1abc9c; /* Teal color focus */
+            box-shadow: 0 0 8px rgba(26, 188, 156, 0.5);
         }
 
         .clear-icon {
@@ -63,8 +61,8 @@
             right: 15px;
             top: 50%;
             transform: translateY(-50%);
-            font-size: 1.5rem;
-            color: #888;
+            font-size: 1.2rem;
+            color: #3498db;
             cursor: pointer;
             display: none;
         }
@@ -74,96 +72,64 @@
         }
 
         .result-item {
-            background-color: #fff;
-            border: 1px solid #ddd;
-            border-radius: 15px;
+            background-color: #ffffff;
+            border: 2px solid #f1f1f1; /* Light gray border */
+            border-radius: 10px;
             padding: 20px;
-            margin-bottom: 20px;
+            margin-bottom: 30px;
+            box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.1);
             transition: transform 0.3s ease, box-shadow 0.3s ease;
             cursor: pointer;
-            box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
         }
 
         .result-item:hover {
             transform: scale(1.05);
-            box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.15);
+            box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.2);
+            border-color: #f39c12; /* Yellow border on hover */
         }
 
         .highlight {
-            background-color: #ffeb3b;
+            background-color: #f39c12;
             font-weight: bold;
-        }
-
-        .click-indicator {
-            margin-top: 10px;
-            font-size: 1.1rem;
-            color: #ff6f61;
-            text-transform: uppercase;
-            font-weight: bold;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-        }
-
-        .click-indicator i {
-            margin-right: 8px;
         }
 
         footer {
-            background-color: #333;
-            color: #fff;
-            padding: 20px;
+            background-color: #34495e; /* Dark gray-blue footer */
+            color: #ffffff;
+            padding: 30px;
             text-align: center;
-            position: fixed;
-            width: 100%;
-            bottom: 0;
-            border-top: 1px solid #444;
+            position: relative;
+            margin-top: 50px;
         }
 
         footer a {
-            color: #ff6f61;
+            color: #ecf0f1; /* Light gray links */
             text-decoration: none;
-            margin: 0 10px;
-            font-weight: bold;
+            margin: 0 15px;
+            transition: color 0.3s ease;
         }
 
         footer a:hover {
-            color: #ff4b39;
+            color: #3498db; /* Blue color on hover */
         }
 
         .modal-content {
-            background-color: #1f1f1f;
-            color: #fff;
-            border-radius: 15px;
-            border: none;
+            font-family: 'Poppins', sans-serif;
         }
 
         .modal-header {
-            border-bottom: 2px solid #ff6f61;
+            border-bottom: 2px solid #3498db; /* Teal border for modal header */
         }
 
-        .modal-header .btn-close {
-            background-color: #ff6f61;
+        .card {
+            box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border-radius: 10px;
         }
 
-        .modal-body {
-            font-size: 1.1rem;
-            line-height: 1.6;
-        }
-
-        @media (max-width: 768px) {
-            .container {
-                padding: 30px;
-            }
-
-            h1 {
-                font-size: 2rem;
-            }
-
-            .form-inline {
-                flex-direction: column;
-                gap: 10px;
-            }
+        .card:hover {
+            transform: scale(1.05);
+            box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.2);
         }
 
     </style>
@@ -179,9 +145,10 @@
             <i class="fas fa-times clear-icon" id="clearSearch"></i>
         </div>
 
-        <div class="result" id="result"></div>
+        <div class="row" id="result"></div>
     </div>
 
+    <!-- Modal Detail -->
     <div class="modal fade" id="detailModal" tabindex="-1" aria-labelledby="detailModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -194,6 +161,7 @@
         </div>
     </div>
 
+    <!-- Bootstrap JS & Popper -->
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.min.js"></script>
 
@@ -204,16 +172,15 @@
             const response = await fetch('data.json');
             data = await response.json();
 
-            // Mengisi data kosong ("-") dengan data dari baris sebelumnya yang relevan
             let lastFilled = {};
             data.forEach(item => {
-                Object.keys(item).forEach(key => {
+                ["MERK", "GRUP MODEL", "MODEL"].forEach(key => {
                     if (item[key] === "" || item[key] === "-") {
                         if (lastFilled[key]) {
-                            item[key] = lastFilled[key]; // Isi data kosong dengan data sebelumnya
+                            item[key] = lastFilled[key];
                         }
                     } else {
-                        lastFilled[key] = item[key]; // Perbarui data terakhir yang valid
+                        lastFilled[key] = item[key];
                     }
                 });
             });
@@ -233,12 +200,9 @@
                 const keywords = query.split(' ').filter(Boolean);
 
                 return keywords.every(keyword => {
-                    // Cek apakah ada tahun dalam query dan cocokkan dengan key tahun
                     if (/\d{4}/.test(keyword)) {
                         return Object.keys(item).some(key => key === keyword && !isNaN(item[key]));
                     }
-
-                    // Jika tidak ada tahun, cek semua nilai item
                     return Object.values(item).some(value => value.toString().toLowerCase().includes(keyword));
                 });
             });
@@ -256,20 +220,25 @@
             }
             filteredData.forEach(item => {
                 const resultItem = document.createElement('div');
+                resultItem.classList.add('col-md-4');
                 resultItem.classList.add('result-item');
                 let highlightedText = item["MODEL DESC SYSTEM"];
                 highlightedText = highlightedText.replace(new RegExp('(' + query.split(' ').join('|') + ')', 'gi'), '<span class="highlight">$1</span>');
                 resultItem.innerHTML = `
-                    <i class="fas fa-car"></i>
-                    <strong>Merk:</strong> ${item["MERK"] || '-'} <br>
-                    <strong>MODEL DESC SYSTEM:</strong> ${highlightedText} <br>
-                    <strong>MODEL:</strong> ${item["MODEL"] || '-'} <br>
-                    <strong>CC:</strong> ${item["CC"] || '-'} <br>
-                    <strong>Jenis:</strong> ${item["Jenis"] || '-'} <br>
-                    <strong>BBM:</strong> ${item["BBM"] || '-'} <br>
-                    <strong>Transmisi:</strong> ${item["Transmisi"] || '-'} <br>
-                    <strong>CODE:</strong> ${item["CODE"] || '-'} <br>
-                    <div class="click-indicator"><i class="fas fa-info-circle"></i> Klik untuk detail</div>
+                    <div class="card">
+                        <div class="card-body">
+                            <i class="fas fa-car"></i>
+                            <strong>Merk:</strong> ${item["MERK"] || '-'} <br>
+                            <strong>MODEL DESC SYSTEM:</strong> ${highlightedText} <br>
+                            <strong>MODEL:</strong> ${item["MODEL"] || '-'} <br>
+                            <strong>CC:</strong> ${item["CC"] || '-'} <br>
+                            <strong>Jenis:</strong> ${item["Jenis"] || '-'} <br>
+                            <strong>BBM:</strong> ${item["BBM"] || '-'} <br>
+                            <strong>Transmisi:</strong> ${item["Transmisi"] || '-'} <br>
+                            <strong>CODE:</strong> ${item["CODE"] || '-'} <br>
+                            <div class="click-indicator"><i class="fas fa-info-circle"></i> Klik untuk detail</div>
+                        </div>
+                    </div>
                 `;
                 resultItem.addEventListener('click', () => {
                     showDetailModal(item, query);
@@ -296,33 +265,23 @@
                 if (key.match(/^\d{4}$/)) {
                     const price = item[key];
                     if (price) {
-                        modalContent += `<strong>${key}:</strong> ${new Intl.NumberFormat().format(price)}<br>`;
+                        modalContent += `<strong>${key}:</strong> ${new Intl.NumberFormat().format(price)} <br>`;
                     }
                 }
             });
             modalBody.innerHTML = modalContent;
-            const modal = new bootstrap.Modal(document.getElementById('detailModal'));
-            modal.show();
+            const myModal = new bootstrap.Modal(document.getElementById('detailModal'));
+            myModal.show();
         }
 
         document.getElementById('clearSearch').addEventListener('click', () => {
             document.getElementById('searchBox').value = '';
             document.getElementById('clearSearch').classList.remove('show');
-            renderResults([], '');
+            renderResults(data, '');
         });
 
-        window.onload = loadData;
+        loadData();
     </script>
-
-    <footer>
-        <p>&copy; 2024 Created and Designed by <br><a href="https://wa.me/6282288246821" target="_blank">Fahmi Anhari.</a></p>
-        <div>
-            <a href="#" target="_blank"><i class="fab fa-facebook"></i></a>
-            <a href="#" target="_blank"><i class="fab fa-twitter"></i></a>
-            <a href="#" target="_blank"><i class="fab fa-instagram"></i></a>
-        </div>
-    </footer>
-
 </body>
 
 </html>
